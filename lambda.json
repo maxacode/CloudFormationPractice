@@ -1,0 +1,69 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Lambda Practice V1",
+    "Metadata": {
+
+    },
+    "Parameters": {
+    
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        "LambdaRole": {
+            "Type" : "AWS::IAM::Role",
+            "Properties" : {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{"Effect": "Allow", "Principal": {"Service": ["lambda.amazonaws.com"]}, "Action": ["sts:AssumeRole"] }]
+                }
+            }
+        },
+        "LambdaTestv1": {
+            "Type" : "AWS::Lambda::Function",
+            "Properties" : {
+                "Runtime": "python3.8",
+                "Handler": "index.handler",
+                "Role" : { "Fn::GetAtt" : ["LambdaRole", "Arn"] }, 
+                "Code": {
+                    "ZipFile": { "Fn::Join": ["", [
+                        "print('Hello World')"
+                    ]]
+                    }
+                }            
+             }
+        },
+        "version": {
+            "Type" : "AWS::Lambda::Version",
+            "Properties" : {
+                "FunctionName" : {
+                    "Ref" : "LambdaTestv1"
+                },
+                "Description" : "v1"
+            }
+        },
+        "LambdaAlias1": {
+            "Type" : "AWS::Lambda::Alias",
+            "Properties": {
+                "Description": "Test Alias",
+                "FunctionName" : { 
+                    "Ref" : "LambdaTestv1" 
+                },
+                "FunctionVersion": { 
+                    "Fn::GetAtt" : "version.Version"
+                },
+                "Name" : "Test_Alias"
+
+            }
+        },
+        "lambdaEventSource"
+
+    },
+    "Outputs": {
+        
+    }
+}

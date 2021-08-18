@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources: 
+    #Basic
+    EC2Instance:
+        Type: AWS::EC2::Instance
+        Properties:
+          ImageId: ami-a4c7edb2
+          InstanceType: t2.micro
+          Tags:
+            -
+              Key: Name
+              Value: Test Instance
+    EC2Instance2:
+        Type: AWS::EC2::Instance
+        Properties:
+          ImageId: ami-a4c7edb2
+          InstanceType: t2.micro
+          Tags:
+            -
+              Key: Name
+              Value: Test Instance     
+    EC2Instance3:
+        Type: AWS::EC2::Instance
+        Properties:
+          ImageId: ami-a4c7edb2
+          InstanceType: t2.micro
+          Tags:
+            -
+              Key: Name
+              Value: Test Instance
+
+    SSHSecurityGroup: 
+      Type: AWS::EC2::SecurityGroup
+      Properties: 
+        GroupDescription: Enable SSSH acces via port 22
+        SecurityGroupIngress: 
+          - CidrIp: 0.0.0.0/0
+            FromPort: 22
+            IpProtocol: tcp
+            ToPort: 22
+    
+    WebSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupDescription: Enable HTTP acces via user defined Properties
+        SecurityGroupIngress:
+          - CidrIp: 0.0.0.0/0
+            FromPort: 80
+            IpProtocol: tcp
+            ToPort: 80

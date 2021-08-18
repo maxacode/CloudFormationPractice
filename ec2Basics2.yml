@@ -1,0 +1,75 @@
+#ec2Basics2 testings self knowledge
+
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Testing EC2 Basics knowledge
+
+Resources:
+  #First EC2 Instance with Web Site
+    EC2Instance:
+        Type: AWS::EC2::Instance
+        Properties:
+          ImageId: ami-0aeeebd8d2ab47354
+          InstanceType: t2.micro
+          Monitoring: True
+          SecurityGroupIds: [ec2AllowHTTPOnly]
+          UserData:
+            Fn::Base64: !Sub |
+                #!/bin/bash
+                yum install -y httpd
+                systemctl start httpd
+                systemctl enable httpd
+                INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+                echo $INSTANCE_ID >> /var/www/html/index.html
+                reboot
+          Tags:
+            -
+              Key: Name
+              Value: Instance_1
+      #Second EC2 Instnace with Website but Different Infro in it. 
+    EC2Instance2:
+        Type: AWS::EC2::Instance
+        Properties:
+          ImageId: ami-0aeeebd8d2ab47354
+          InstanceType: t2.micro
+          Monitoring: True
+          SecurityGroupIds: [ec2AllowHTTPOnly]
+          UserData:
+            Fn::Base64: !Sub |
+                #!/bin/bash
+                yum install -y httpd
+                systemctl start httpd
+                systemctl enable httpd
+                INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+                echo $INSTANCE_ID >> /var/www/html/index.html
+                reboot
+          Tags:
+            -
+              Key: Name
+              Value: Instance_2
+Outputs:
+  PublicIp2:
+    Description: Server Public IP
+    Value: !GetAtt EC2Instance.PublicIp
+  PublicIp:
+    Description: Server Public IP
+    Value: !GetAtt EC2Instance2.PublicIp
+ 
+
+      #Security Group for Instnaces to only Allow HTTP 
+    # WebSecurityGroupForInstances:
+    #     Type: AWS::EC2::SecurityGroup
+    #     Properties:
+    #       GroupName: ec2AllowHTTPOnly2
+    #       GroupDescription: Enable HTTP access to instances
+    #       VpcId: vpc-80d841fd
+    #       SecurityGroupEgress:
+    #         - IpProtocol: tcp
+    #           FromPort: 80
+    #           ToPort: 80
+    #           CidrIp: 71.208.104.143/32
+    #       SecurityGroupIngress:
+    #         - IpProtocol: tcp
+    #           FromPort: 80
+    #           ToPort: 80
+    #           CidrIp: 71.208.104.143/32

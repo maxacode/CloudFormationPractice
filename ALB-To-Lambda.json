@@ -1,0 +1,53 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "ALB to Lambda testing if 'Subnet' or 'Subnetmapping' needds to be used",
+    "Metadata": {
+
+    },
+    "Parameters": {
+    
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+        "LambdaRole": {
+            "Type" : "AWS::IAM::Role",
+            "Properties" : {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{"Effect": "Allow", "Principal": {"Service": ["lambda.amazonaws.com"]}, "Action": ["sts:AssumeRole"] }]
+                }
+            }
+        },
+        "Lambda": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Runtime": "python3.7",
+                "Role" : {"Fn::GetAtt": ["LambdaRole","Arn"]},
+                "Handler" : "lambda_function.handler",
+                "Code": {
+                    "ZipFile" : { "Fn::Join" : ["", [
+                        "def handler(event, context):
+                            response = {
+                                'isBase64Encoded': False, 
+                                'statusCode': '200',
+                                'body': 'Hello World!' 
+                                }
+                                return response"
+                        
+                    ]]
+                }
+
+                }
+            }
+        }
+
+    },
+    "Outputs": {
+
+    }
+}
